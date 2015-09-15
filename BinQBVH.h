@@ -463,11 +463,12 @@ namespace lrender
             while(minBins[binLeft]<=0){++binLeft;}
             while(maxBins[binRight]<=0){--binRight;}
 
-            s32 n_l = minBins[0];
-            s32 n_r = 0;
-            for(s32 i=1; i<binRight; ++i){
+            s32 n_l = 0;
+            s32 n_r = maxBins[binRight];
+            for(s32 i=0; i<binRight; ++i){
                 n_r += maxBins[i];
             }
+
             for(s32 m=binLeft; m<=binRight; ++m){
                 f32 area_l = m*unitArea;
                 f32 area_r = (NumBins-m)*unitArea;
@@ -493,10 +494,10 @@ namespace lrender
         s32 right = end-1;
 
         for(;;){
-            while(primitiveBBoxes_[ primitiveIndices_[left] ].bmin_[axis] < separate){
+            while(bestCentroids[ primitiveIndices_[left] ] < separate){
                 ++left;
             }
-            while(separate <= primitiveBBoxes_[ primitiveIndices_[right] ].bmax_[axis]){
+            while(separate <= bestCentroids[ primitiveIndices_[right] ]){
                 --right;
             }
             if(right<=left){
