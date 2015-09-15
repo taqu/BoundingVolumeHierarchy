@@ -16,7 +16,7 @@ namespace lrender
         static const f32 Epsilon;
         static const s32 MinLeafPrimitives = 15;
         static const s32 NumBins = 32;
-        static const s32 MaxBinningDepth = 24;
+        static const s32 MaxBinningDepth = 16;
 
         struct Node
         {
@@ -254,7 +254,7 @@ namespace lrender
             Node& node = nodes_[nodeIndex];
             primStart[0] = start;
 
-            if(MaxBinningDepth<depth_){
+            if(MaxBinningDepth<depth){
                 splitMid(node.axis0_, num[0], num[2], childBBox[0], childBBox[2], primStart[0], numPrimitives, bbox);
                 primStart[2] = start + num[0];
 
@@ -457,12 +457,18 @@ namespace lrender
             Vector3 e = extent; e[curAxis] = unit[curAxis];
             f32 unitArea = e.halfArea();
 
+            s32 binLeft = 0;
+            s32 binRight = NumBins - 1;
+
+            while(minBins[binLeft]<=0){++binLeft;}
+            while(maxBins[binRight]<=0){--binRight;}
+
             s32 n_l = minBins[0];
             s32 n_r = 0;
-            for(s32 i=1; i<NumBins; ++i){
+            for(s32 i=1; i<binRight; ++i){
                 n_r += maxBins[i];
             }
-            for(s32 m=1; m<NumBins; ++m){
+            for(s32 m=binLeft; m<=binRight; ++m){
                 f32 area_l = m*unitArea;
                 f32 area_r = (NumBins-m)*unitArea;
                 f32 cost = SAH_KT_ + SAH_KI_*invArea*(area_l*n_l + area_r*n_r);
@@ -487,10 +493,10 @@ namespace lrender
         s32 right = end-1;
 
         for(;;){
-            while(bestCentroids[primitiveIndices_[left]]<separate){
+            while(primitiveBBoxes_[ primitiveIndices_[left] ].bmin_[axis] < separate){
                 ++left;
             }
-            while(separate<bestCentroids[primitiveIndices_[right]]){
+            while(separate <= primitiveBBoxes_[ primitiveIndices_[right] ].bmax_[axis]){
                 --right;
             }
             if(right<=left){
@@ -502,11 +508,16 @@ namespace lrender
             --right;
         }
 
-        getBBox(bbox_l, start, mid);
-        getBBox(bbox_r, mid, end);
+        if(mid == start || mid == (end-1)){
+            splitMid(axis, num_l, num_r, bbox_l, bbox_r, start, numPrimitives, bbox);
+        } else{
 
-        num_l = mid-start;
-        num_r = numPrimitives - num_l;
+            getBBox(bbox_l, start, mid);
+            getBBox(bbox_r, mid, end);
+
+            num_l = mid - start;
+            num_r = numPrimitives - num_l;
+        }
     }
 
     template<class PrimitiveType, class PrimitivePolicy>

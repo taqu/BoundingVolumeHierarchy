@@ -136,24 +136,24 @@ int main(int argc, char** argv)
 #endif
     initScene();
 
-    lrender::s32 bvhDepth;
-    lrender::f64 bvhBuildTime, bvhRenderTime;
+    lrender::s32 bvhDepth=0;
+    lrender::f64 bvhBuildTime=0.0f, bvhRenderTime=0.0f;
     test<lrender::BVH<lrender::Sphere> >(bvhDepth, bvhBuildTime, bvhRenderTime, NumSpheres, spheres, "out_bvh.ppm", false);
 
-    lrender::s32 midbvhDepth;
-    lrender::f64 midbvhBuildTime, midbvhRenderTime;
+    lrender::s32 midbvhDepth=0;
+    lrender::f64 midbvhBuildTime=0.0f, midbvhRenderTime=0.0f;
     test<lrender::MidBVH<lrender::Sphere> >(midbvhDepth, midbvhBuildTime, midbvhRenderTime, NumSpheres, spheres, "out_midbvh.ppm", false);
 
-    lrender::s32 binbvhDepth;
-    lrender::f64 binbvhBuildTime, binbvhRenderTime;
+    lrender::s32 binbvhDepth = 0;
+    lrender::f64 binbvhBuildTime=0.0f, binbvhRenderTime=0.0f;
     test<lrender::BinBVH<lrender::Sphere> >(binbvhDepth, binbvhBuildTime, binbvhRenderTime, NumSpheres, spheres, "out_binbvh.ppm", false);
 
     lrender::s32 qbvhDepth;
     lrender::f64 qbvhBuildTime, qbvhRenderTime;
     test<lrender::MidQBVH<lrender::Sphere> >(qbvhDepth, qbvhBuildTime, qbvhRenderTime, NumSpheres, spheres, "out_qbvh.ppm", false);
 
-    lrender::s32 binqbvhDepth;
-    lrender::f64 binqbvhBuildTime, binqbvhRenderTime;
+    lrender::s32 binqbvhDepth = 0;
+    lrender::f64 binqbvhBuildTime=0.0f, binqbvhRenderTime=0.0f;
     test<lrender::BinQBVH<lrender::Sphere> >(binqbvhDepth, binqbvhBuildTime, binqbvhRenderTime, NumSpheres, spheres, "out_binqbvh.ppm", false);
 
     termScene();
