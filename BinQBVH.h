@@ -428,7 +428,6 @@ namespace lrender
         s32 end = start + numPrimitives;
 
         f32* centroids = &primitiveCentroids_[0];
-        f32* bestCentroids = centroids;
 
         f32 bestCost = std::numeric_limits<f32>::max();
         s32 midBin = NumBins/2;
@@ -464,8 +463,8 @@ namespace lrender
             while(maxBins[binRight]<=0){--binRight;}
 
             s32 n_l = minBins[0];
-            s32 n_r = 0;
-            for(s32 i=1; i<binRight; ++i){
+            s32 n_r = maxBins[0];
+            for(s32 i=1; i<=binRight; ++i){
                 n_r += maxBins[i];
             }
             for(s32 m=binLeft; m<=binRight; ++m){
@@ -476,7 +475,6 @@ namespace lrender
                     midBin = m;
                     bestCost = cost;
                     axis = curAxis;
-                    bestCentroids = centroids;
                 }
 
                 n_l += minBins[m];
@@ -486,7 +484,7 @@ namespace lrender
             centroids += primitiveIndices_.size();
         }//for(s32 curAxis=0;
 
-        f32 separate = unit[axis] * midBin + bbox.bmin_[axis];
+        f32 separate = unit[axis] * (midBin+1) + bbox.bmin_[axis];
         s32 mid = start+(numPrimitives >> 1);
 
         s32 left = start;
