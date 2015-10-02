@@ -406,6 +406,8 @@ namespace lrender
                 s32 index = primitiveIndices_[i];
                 s32 minIndex = minimum(static_cast<s32>(invUnit * (primitiveBBoxes_[index].bmin_[curAxis] - bmin)), NumBins-1);
                 s32 maxIndex = minimum(static_cast<s32>(invUnit * (primitiveBBoxes_[index].bmax_[curAxis] - bmin)), NumBins-1);
+                LASSERT(0<=minIndex && minIndex<NumBins);
+                LASSERT(0<=maxIndex && maxIndex<NumBins);
                 ++minBins[minIndex];
                 ++maxBins[maxIndex];
             }
@@ -418,6 +420,8 @@ namespace lrender
 
             while(minBins[binLeft]<=0){++binLeft;}
             while(maxBins[binRight]<=0){--binRight;}
+            LASSERT(0<=binLeft&&binLeft<NumBins);
+            LASSERT(0<=binRight&&binRight<NumBins);
 
             s32 n_l = 0;
             s32 n_r = maxBins[binRight];
@@ -449,10 +453,10 @@ namespace lrender
         s32 left = start;
         s32 right = end - 1;
         for(;;){
-            while(bestCentroids[ primitiveIndices_[left] ] < separate){
+            while(left<end && bestCentroids[ primitiveIndices_[left] ] < separate){
                 ++left;
             }
-            while(separate <= bestCentroids[ primitiveIndices_[right] ]){
+            while(start<=right && separate <= bestCentroids[ primitiveIndices_[right] ]){
                 --right;
             }
             if(right<=left){
@@ -472,7 +476,8 @@ namespace lrender
             }
         }
 #endif
-        if(mid == start || mid == (end-1)){
+        LASSERT(start<=mid && mid<=end);
+        if(mid == start || mid == end){
             splitMid(axis, num_l, num_r, bbox_l, bbox_r, start, numPrimitives, nodeIndex);
         } else{
 
