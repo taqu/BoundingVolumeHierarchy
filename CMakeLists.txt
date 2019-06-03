@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.12)
 
 set(CMAKE_CONFIGURATION_TYPES "Debug" "Release")
 
@@ -28,8 +28,8 @@ if(MSVC)
     endif()
 
     set(CMAKE_CXX_FLAGS "${DEFAULT_CXX_FLAGS}")
-    set(CMAKE_CXX_FLAGS_DEBUG "/D_DEBUG /DMU3_EXPORTS /MTd /Zi /Ob0 /Od /RTC1 /Gy /GR- /GS /Gm-")
-    set(CMAKE_CXX_FLAGS_RELEASE "/DMU3_EXPORTS /MT /O2 /GL /GR- /DNDEBUG")
+    set(CMAKE_CXX_FLAGS_DEBUG "/D_DEBUG /MTd /Zi /Ob0 /Od /RTC1 /Gy /GR- /GS /Gm-")
+    set(CMAKE_CXX_FLAGS_RELEASE "/MT /O2 /GL /GR- /DNDEBUG")
 elseif(UNIX)
     set(DEFAULT_CXX_FLAGS "-Wall -O2 -std=c++11")
     set(CMAKE_CXX_FLAGS "${DEFAULT_CXX_FLAGS}")
